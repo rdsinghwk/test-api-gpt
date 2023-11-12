@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-
+import random 
 app = Flask(__name__)
 
 @app.route("/happiness", methods=["GET"])
@@ -13,8 +13,8 @@ def get_happiness():
 
 
 def get_happiness_from_location(location):
-  happiness_percent = 50 # random.randint(0, 100)
+  happiness_percent = random.randint(0, 100)
   return happiness_percent
 
 if __name__ == "__main__":
-  app.run(host="0.0.0.0", port=4444)
+  app.run()
