@@ -1,1 +1,1 @@
-web: gunicorn -b :5000 exampleAPI:app --log-file -
+web: gunicorn exampleAPI:app --log-file -
