@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 import random 
+
 app = Flask(__name__)
 
-@app.route("/happiness", methods=["GET"])
 
+@app.route("/m3-ai", methods=["GET"])
 def get_happiness():
   location = request.args.get("location")
   happiness_percent = get_happiness_from_location(location)
@@ -11,10 +12,21 @@ def get_happiness():
       "happiness_percent": happiness_percent
   })
 
-
 def get_happiness_from_location(location):
-  happiness_percent = random.randint(0, 100)
+  if location==None or location=="":
+    happiness_percent = 0
+  else:
+    happiness_percent = random.randint(0, 100)
   return happiness_percent
+
+@app.route("/maia", methods=["GET"])
+def get_thanks():
+  happiness_score = request.args.get("happiness_score")
+  returnText = "Thanks. Received " + str(happiness_score)
+  return jsonify({
+      "happiness_received": returnText
+  })
+
 
 if __name__ == "__main__":
   app.run()
