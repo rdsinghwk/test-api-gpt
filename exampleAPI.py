@@ -27,6 +27,14 @@ def get_thanks():
       "happiness_received": returnText
   })
 
+@app.route("/maia", methods=["POST"])
+def record_symptoms():
+  symptoms = request.args.get("symptoms")
+  returnText = "Thanks. Recorded Symptoms Succesfully" # Add number later
+  return jsonify({
+      "message": returnText
+  })
+
 
 if __name__ == "__main__":
   app.run()
