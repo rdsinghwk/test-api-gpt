@@ -29,7 +29,6 @@ def get_thanks():
 
 @app.route("/maia-rs", methods=["POST"])
 def symptoms():
-    print("Got in here")
     data = request.get_json()
     userId = data['userID']
     symptoms = data['symptoms']
@@ -38,6 +37,25 @@ def symptoms():
       "message": returnText
     })
 
+@app.route("/maia-rm", methods=["POST"])
+def midas():
+    data = request.get_json()
+    userId = data['userID']
+    symptoms = data['midas']
+    returnText = "Thanks. MIDAS assessment recorded successfully" # Add number later
+    return jsonify({
+      "message": returnText
+    })
+
+@app.route("/maia-rh", methods=["POST"])
+def hit6():
+    data = request.get_json()
+    userId = data['userID']
+    symptoms = data['hit6']
+    returnText = "Thanks. Hit-6 assessment recorded successfully" # Add number later
+    return jsonify({
+      "message": returnText
+    })
 
 if __name__ == "__main__":
   app.run()
