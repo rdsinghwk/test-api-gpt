@@ -27,13 +27,16 @@ def get_thanks():
       "happiness_received": returnText
   })
 
-@app.route("/maia", methods=["POST"])
-def record_symptoms():
-  symptoms = request.args.get("symptoms")
-  returnText = "Thanks. Recorded Symptoms Succesfully" # Add number later
-  return jsonify({
+@app.route("/maia-rs", methods=["POST"])
+def symptoms():
+    print("Got in here")
+    data = request.get_json()
+    userId = data['userID']
+    symptoms = data['symptoms']
+    returnText = "Thanks. Symptoms recorded successfully" # Add number later
+    return jsonify({
       "message": returnText
-  })
+    })
 
 
 if __name__ == "__main__":
