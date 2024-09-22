@@ -10,7 +10,7 @@ def get_happiness():
   userName = request.args.get("user")
   happiness_percent = get_happiness_from_location(location)
   return jsonify({
-      "user_id": userName
+      "user_id": userName,
       "happiness_percent": happiness_percent
   })
 
