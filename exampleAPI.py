@@ -7,8 +7,10 @@ app = Flask(__name__)
 @app.route("/m3-ai", methods=["GET"])
 def get_happiness():
   location = request.args.get("location")
+  userName = request.args.get("user")
   happiness_percent = get_happiness_from_location(location)
   return jsonify({
+      "user_id": user
       "happiness_percent": happiness_percent
   })
 
