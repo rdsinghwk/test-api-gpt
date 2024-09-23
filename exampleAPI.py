@@ -1,8 +1,68 @@
 from flask import Flask, request, jsonify
 import random 
+import json
 
 app = Flask(__name__)
 
+def load_data_map(file_path):
+    with open(file_path, 'r') as file:
+        return json.load(file)
+
+data_map_pcs = load_data_map('pcs-codes.json')
+data_map_modifiers = load_data_map('modifiers.json')
+data_map_cms = load_data_map('icm-codes.json')
+ 
+@app.route('/ground_mod', methods=['GET'])
+def ground_mod():
+    gptcode = request.args.get('doccode').strip('"')
+    gptvalue = request.args.get('docvalue')
+
+    matchValue = data_map_modifiers.get(gptcode)
+    if not matchValue is None:
+        if(matchValue == gptvalue.strip('"')):
+            returnValue = [{"key": gptcode, "value": matchValue, "message": "good match"}]
+            return jsonify(returnValue)
+        else:
+            returnValue = [{"key": gptcode, "value": matchValue+"--"+gptvalue, "message": "partial match"}]
+            return jsonify(returnValue)
+    else:
+        return jsonify({"error": "No matching key-value pairs found"}), 404
+
+@app.route('/ground_cms', methods=['GET'])
+def ground_cms():
+    gptcode = request.args.get('doccode').strip('"')
+    gptvalue = request.args.get('docvalue')
+
+    matchValue = data_map_cms.get(gptcode)
+    if not matchValue is None:
+        if(matchValue == gptvalue.strip('"')):
+            returnValue = [{"key": gptcode, "value": matchValue, "message": "good match"}]
+            return jsonify(returnValue)
+        else:
+            returnValue = [{"key": gptcode, "value": matchValue+"--"+gptvalue, "message": "partial match"}]
+            return jsonify(returnValue)
+    else:
+        return jsonify({"error": "No matching key-value pairs found"}), 404
+
+@app.route('/ground_pcs', methods=['GET'])
+def ground_pcs():
+    gptcode = request.args.get('doccode').strip('"')
+    gptvalue = request.args.get('docvalue')
+
+    matchValue = data_map_pcs.get(gptcode)
+    if not matchValue is None:
+        if(matchValue == gptvalue.strip('"')):
+            returnValue = [{"key": gptcode, "value": matchValue, "message": "good match"}]
+            return jsonify(returnValue)
+        else:
+            returnValue = [{"key": gptcode, "value": matchValue+"--"+gptvalue, "message": "partial match"}]
+            return jsonify(returnValue)
+    else:
+        return jsonify({"error": "No matching key-value pairs found"}), 404
+    
+
+def checkValueExists(visit_number, keyName):
+    return (keyName in patient_records[visit_number])
 
 @app.route("/m3-ai", methods=["GET"])
 def get_happiness():
