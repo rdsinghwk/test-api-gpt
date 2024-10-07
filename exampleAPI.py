@@ -20,6 +20,7 @@ thresholdMatch = 0.6
 thresholdScale = 0.8
 topN = 5
 
+# Just to test connection
 #def ground(codes_to_check,referencePhrase,code_dict):
 #    descriptions = list(codes_dict.values())
 #
