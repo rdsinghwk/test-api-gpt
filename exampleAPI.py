@@ -1,9 +1,15 @@
 from flask import Flask, request, jsonify
 import random 
 import json
+#scikit-learn
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+
+#print(np.__version__)
+#print(sklearn.__version__)
+#print(json.__version__)
+#print(random.__version__)
 
 app = Flask(__name__)
 
@@ -12,7 +18,7 @@ def load_data_map(file_path):
         return json.load(file)
 
 data_map_pcs = load_data_map('pcs-codes.json')
-data_map_modifiers = load_data_map('modifiers.json')
+data_map_mod = load_data_map('modifiers.json')
 #data_map_cms = load_data_map('icm-codes.json')
 data_map_cms = load_data_map('latest_cms_codes.json')
 
@@ -89,27 +95,30 @@ topN = 5
     
 @app.route('/ground_mod', methods=['GET'])
 def ground_mod():
-    gptcodes = request.args.get('doccode').strip('"').split(",") # interesting
-    matches = []
-    valueFound = False
-    codesNotFound=[]
-    for gptcode in gptcodes:
-        matchValue = data_map_modifiers.get(gptcode)
-        if not matchValue is None:
-            valueFound = True
-            matches.append({"key": gptcode, "value": matchValue})
-        else:
-            codesNotFound.append({"key":gptcode})
-          
-    print(codesNotFound)    
-    if(valueFound):
-        if(codesNotFound == []):
-            data = {"message": "Here are the matching codes","matches": matches}
-        else:    
-            data = {"message": "Here are the matching codes","matches": matches, "codesNotFound": codesNotFound}
-    else:
-        data = {"message": "Found no matching codes","codesNotFound": codesNotFound}
-    return data
+    gptcodes = request.args.get('chatgcodes').strip('"').split(",") # interesting
+    refphrase = request.args.get('docphrase')
+    return ground(set(gptcodes),refphrase, data_map_mod)    
+#    gptcodes = request.args.get('doccode').strip('"').split(",") # interesting
+#    matches = []
+#    valueFound = False
+#    codesNotFound=[]
+#    for gptcode in gptcodes:
+#        matchValue = data_map_modifiers.get(gptcode)
+#        if not matchValue is None:
+#            valueFound = True
+#            matches.append({"key": gptcode, "value": matchValue})
+#        else:
+#            codesNotFound.append({"key":gptcode})
+#          
+#    print(codesNotFound)    
+#    if(valueFound):
+#        if(codesNotFound == []):
+#            data = {"message": "Here are the matching codes","matches": matches}
+#        else:    
+#            data = {"message": "Here are the matching codes","matches": matches, "codesNotFound": codesNotFound}
+#    else:
+#        data = {"message": "Found no matching codes","codesNotFound": codesNotFound}
+#    return data
 
 @app.route('/ground_cms', methods=['GET'])
 def ground_cms():
@@ -144,27 +153,31 @@ def ground_cms():
 
 @app.route('/ground_pcs', methods=['GET'])
 def ground_pcs():
-    gptcodes = request.args.get('doccode').strip('"').split(",") # interesting
-    matches = []
-    valueFound = False
-    codesNotFound=[]
-    for gptcode in gptcodes:
-        matchValue = data_map_pcs.get(gptcode)
-        if not matchValue is None:
-            valueFound = True
-            matches.append({"key": gptcode, "value": matchValue})
-        else:
-            codesNotFound.append({"key":gptcode})
-          
-    print(codesNotFound)    
-    if(valueFound):
-        if(codesNotFound == []):
-            data = {"message": "Here are the matching codes","matches": matches}
-        else:    
-            data = {"message": "Here are the matching codes","matches": matches, "codesNotFound": codesNotFound}
-    else:
-        data = {"message": "Found no matching codes","codesNotFound": codesNotFound}
-    return data
+    gptcodes = request.args.get('chatgcodes').strip('"').split(",") # interesting
+    refphrase = request.args.get('docphrase')
+    return ground(set(gptcodes),refphrase, data_map_pcs)
+
+#    gptcodes = request.args.get('doccode').strip('"').split(",") # interesting
+#    matches = []
+#    valueFound = False
+#    codesNotFound=[]
+#    for gptcode in gptcodes:
+#        matchValue = data_map_pcs.get(gptcode)
+#        if not matchValue is None:
+#            valueFound = True
+#            matches.append({"key": gptcode, "value": matchValue})
+#        else:
+#            codesNotFound.append({"key":gptcode})
+#          
+#    print(codesNotFound)    
+#    if(valueFound):
+#        if(codesNotFound == []):
+#            data = {"message": "Here are the matching codes","matches": matches}
+#        else:    
+#            data = {"message": "Here are the matching codes","matches": matches, "codesNotFound": codesNotFound}
+#    else:
+#        data = {"message": "Found no matching codes","codesNotFound": codesNotFound}
+#    return data
     
 
 def checkValueExists(visit_number, keyName):
